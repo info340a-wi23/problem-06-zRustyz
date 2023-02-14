@@ -14,34 +14,47 @@ const COLORS_9 = {
 
 //Create a variable `h1` that refers to the `<h1>` element in the DOM.
 
+let h1 = document.querySelector('h1');
 
 //Change the `textContent` of the `<h1>` element to be "Which Swatch?"
 
+h1.textContent = "Which Swatch?";
 
 //Somehow the rainbow icon image was included without an alt tag! Set its `alt`
 //attribute to be "A beautiful rainbow".
 
+let img = document.querySelector('img');
+
+img.alt = "A beautiful rainbow";
 
 //Give the image the Bootstrap-provided `float-right` CSS class to make it float
 //to the right of the screen
 
+img.classList.add('float-right');
 
-/*Define a function `createColorBox()` that takes in two parameters: a color 
-string (e.g., "blue") and a numeric size (in pixels, e.g., 100). The function 
+/*Define a function `createColorBox()` that takes in two parameters: a color
+string (e.g., "blue") and a numeric size (in pixels, e.g., 100). The function
 should do the following:
   - create a new `div` element
   - give the element the CSS class of `d-inline-block`
   - give the element an inline style `background-color` of the argument color
-  - give the element an inline style `width` and `height` properties that are 
+  - give the element an inline style `width` and `height` properties that are
     both the passed in size in pixels(as strings, e.g., "100px")
   - RETURNS the div element!
 You can test this function by logging out the returned value and checking its
 attributes.
 */
 
+function createColorBox(color, size) {
+  let div = document.createElement('div');
+  div.classList.add('d-inline-block');
+  div.style.backgroundColor = color;
+  div.style.width = size + "px";
+  div.style.height = size + "px";
+  return div;
+}
 
-
-/* Define a function `getElementWidth()` that takes in a DOM element (not a 
+/* Define a function `getElementWidth()` that takes in a DOM element (not a
 string!). This function should return the width in pixels (a number) of that
 element.
  - Determine this width by calling the `getBoundingClientRect()` method on the
@@ -51,17 +64,19 @@ element.
    new function for it! Just call the method on the DOM element.
 */
 
+function getElementWidth(element) {
+  return element.getBoundingClientRect().width;
+}
 
-
-/* Define a function `renderPaletteRow()` that takes in two arguments: array of 
-color strings (like a SINGLE ELEMENT of the `COLORS_9` object), and a "parent" 
+/* Define a function `renderPaletteRow()` that takes in two arguments: array of
+color strings (like a SINGLE ELEMENT of the `COLORS_9` object), and a "parent"
 DOM element. The function should do the following:
   - Create a new `div` element to contain a row of colored boxes
-  - Use the `createColorBox()` function to create a div FOR EACH element in the 
-    argument array. Each "color box" should take up an equal portion of the 
-    parent element (e.g., if the parent has a width of 600 and the array has 3 
-    elements, each color box would be 200px in size).    
-    You should use your `getElementWidth()` function (passing in the "parent" 
+  - Use the `createColorBox()` function to create a div FOR EACH element in the
+    argument array. Each "color box" should take up an equal portion of the
+    parent element (e.g., if the parent has a width of 600 and the array has 3
+    elements, each color box would be 200px in size).
+    You should use your `getElementWidth()` function (passing in the "parent"
     DOM element) to determine its width.
   - Append EACH "color box" to the container div you created.
   - Append the container div to the parent element.
@@ -74,31 +89,45 @@ browser window unless you refresh.
 You should NOT include any test calls when running Jest tests!
 */
 
+function renderPaletteRow(arr, parent) {
+  let div = document.createElement('div');
+  let width = getElementWidth(parent) / arr.length;
+  for (let color of arr) {
+    div.appendChild(createColorBox(color, width));
+  }
+  parent.appendChild(div);
+}
 
 
-/* Define a function `renderPaletteTable()` that takes no arguments and renders 
-a color palette row for each of the palettes in the `COLORS_9` object into the 
-<main> element. This function should _call_ your `renderPaletteRow()` function 
+/* Define a function `renderPaletteTable()` that takes no arguments and renders
+a color palette row for each of the palettes in the `COLORS_9` object into the
+<main> element. This function should _call_ your `renderPaletteRow()` function
 as a helper.
 
-Tip: note that `COLORS_9` is an object, not an array! You'll need to use a 
+Tip: note that `COLORS_9` is an object, not an array! You'll need to use a
 `for...in` loop or `Object.keys()` to iterate through its keys.
 
 Call your `renderPaletteTable()` method to display all the color palettes!
 */
 
+function renderPaletteTable() {
+  for (let key in COLORS_9) {
+    renderPaletteRow(COLORS_9[key], document.querySelector('main'));
+  }
+}
 
+renderPaletteTable();
 
-//Finally, remove the paragraph in the header that explains how to complete the 
+//Finally, remove the paragraph in the header that explains how to complete the
 //problem.
 
-
+document.querySelector('p').innerHTML = "";
 
 //Make functions and variables available to tester. DO NOT MODIFY THIS.
 if(typeof module !== 'undefined' && module.exports){
   /* eslint-disable */
-  if(typeof createColorBox !== 'undefined') 
+  if(typeof createColorBox !== 'undefined')
     module.exports.createColorBox = createColorBox;
-  if(typeof renderPaletteRow !== 'undefined') 
+  if(typeof renderPaletteRow !== 'undefined')
     module.exports.renderPalette = renderPaletteRow;
 }
